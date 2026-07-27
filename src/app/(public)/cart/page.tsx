@@ -19,32 +19,178 @@ import { createUrl, isCheckout, safeParse } from "@utils/helper";
 import { useAddressesFromApi } from "@utils/hooks/getAddress";
 import type { CartSummaryView, CartItemEdge } from "@/types/cart/type";
 import MobileNavHeader from "@/components/layout/navbar/MobileNavHeader";
-import { notFound } from 'next/navigation'
 import { HideMainNavOnMobile } from "@/components/common/HideMainNavOnMobile";
 
 type MerchandiseSearchParams = {
   [key: string]: string;
 };
 
+function CartItemsList({
+  cart,
+  isDesktop = false,
+}: {
+  cart: CartItemEdge[];
+  isDesktop?: boolean;
+}) {
+  return (
+    <ul className={clsx("my-0 flex-grow py-0", !isDesktop && "overflow-auto")}>
+      {cart.map((item: CartItemEdge, i: number) => {
+        const merchandiseSearchParams = {
+          backUrl: "/cart",
+        } as MerchandiseSearchParams;
+        const merchandiseUrl = createUrl(
+          `/product/${item?.node.productUrlKey}`,
+          new URLSearchParams(merchandiseSearchParams),
+        );
+        const baseImage = safeParse<{ small_image_url?: string }>(
+          item?.node?.baseImage,
+        );
+
+        return (
+          <li key={i} className="flex w-full flex-col">
+            <div
+              className={clsx(
+                "flex w-full flex-row justify-between py-4 px-1",
+                isDesktop ? "gap-3" : "gap-1 xxs:gap-3",
+              )}
+            >
+              <Link
+                className="z-30 flex flex-row space-x-4"
+                aria-label={`${item?.node?.name}`}
+                href={merchandiseUrl}
+              >
+                <div className="relative h-16 w-16 cursor-pointer overflow-hidden rounded-md border border-neutral-300 bg-neutral-300 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:bg-neutral-800">
+                  <Image
+                    alt={item?.node?.baseImage || item?.node?.name}
+                    className="h-full w-full object-cover"
+                    height={64}
+                    src={baseImage?.small_image_url || ""}
+                    width={74}
+                    onError={(e) => (e.currentTarget.src = NOT_IMAGE)}
+                  />
+                </div>
+                <div className="flex flex-1 flex-col text-base">
+                  <span className="line-clamp-1 font-outfit text-base font-medium">
+                    {item?.node?.name}
+                  </span>
+                  {item.node.name !== DEFAULT_OPTION && (
+                    <p
+                      className="truncate text-sm lowercase text-black line-clamp-1 dark:text-selected-white"
+                      style={{ maxWidth: isDesktop ? "280px" : "130px" }}
+                    >
+                      {item?.node?.sku}
+                    </p>
+                  )}
+                </div>
+              </Link>
+
+              <div className="flex h-16 flex-col justify-between">
+                <Price
+                  amount={item?.node?.price}
+                  className="flex justify-end space-y-2 text-right font-outfit text-base font-medium"
+                  currencyCode={CURRENCY_CODE}
+                />
+                <div className="flex items-center gap-x-2">
+                  <DeleteItemButton item={item} />
+                  <div className="ml-auto flex h-9 flex-row items-center rounded-full border border-neutral-200 dark:border-neutral-700">
+                    <EditItemQuantityButton item={item} type="minus" />
+                    <p className="w-6 text-center">
+                      <span className="w-full text-sm">{item?.node?.quantity}</span>
+                    </p>
+                    <EditItemQuantityButton item={item} type="plus" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+function CartSummary({
+  cartDetail,
+  cartObj,
+  billingAddress,
+}: {
+  cartDetail: {
+    cart?: {
+      taxAmount?: number | null;
+      grandTotal?: number | null;
+    } | null;
+  };
+  cartObj: CartSummaryView;
+  billingAddress: unknown;
+}) {
+  return (
+    <div className="border-0 border-t border-solid border-neutral-200 py-8 text-sm text-selected-black dark:border-dark-grey dark:text-selected-white">
+      {cartDetail?.cart?.taxAmount != null && cartDetail.cart.taxAmount > 0 && (
+        <div className="mb-3 flex items-center justify-between">
+          <p className="text-base font-normal text-black/[60%] dark:text-white">Pajak</p>
+          <Price
+            amount={String(cartDetail?.cart?.taxAmount ?? 0)}
+            className="text-right text-base font-medium text-black dark:text-white"
+            currencyCode={CURRENCY_CODE}
+          />
+        </div>
+      )}
+      <div className="mb-3 flex items-center justify-between pb-1">
+        <p className="text-base font-normal text-black/[60%] dark:text-white">Total</p>
+        <Price
+          amount={String(cartDetail?.cart?.grandTotal ?? 0)}
+          className="text-right text-base font-medium text-black dark:text-white"
+          currencyCode={CURRENCY_CODE}
+        />
+      </div>
+
+      <form action={redirectToCheckout}>
+        <CheckoutButton
+          cartDetails={cartObj?.items?.edges ?? []}
+          isGuest={cartObj?.isGuest ?? false}
+          isEmail={cartObj?.customerEmail ?? getLocalStorage(EMAIL)}
+          isSelectShipping={cartObj?.selectedShippingRate != null}
+          isSeclectAddress={isObject(billingAddress)}
+          isSelectPayment={cartObj?.paymentMethod != null}
+        />
+      </form>
+    </div>
+  );
+}
+
+function EmptyCart() {
+  return (
+    <div className="mt-20 flex w-full flex-col items-center justify-center overflow-hidden">
+      <ShoppingCartIcon className="h-16" />
+      <p className="mt-6 text-center text-2xl font-bold">Keranjang Anda kosong.</p>
+      <Link
+        href="/search"
+        className="mt-4 text-sm font-medium text-blue-600 hover:underline dark:text-blue-400"
+      >
+        Jelajahi layanan →
+      </Link>
+    </div>
+  );
+}
+
 export default function CartPage() {
   useCartDetail();
   const cartDetail = useAppSelector((state) => state.cartDetail);
   const { billingAddress } = useAddressesFromApi(false);
 
-  if (typeof window !== "undefined" && window.innerWidth >= 1024) {
-    notFound();
-  }
-
   const cart = Array.isArray(cartDetail?.cart?.items?.edges)
     ? cartDetail?.cart?.items?.edges
     : [];
   const cartObj: CartSummaryView = (cartDetail?.cart ?? {}) as CartSummaryView;
+  const isEmpty = cart.length === 0;
 
   return (
     <>
       <HideMainNavOnMobile />
+
+      {/* Mobile */}
       <div
-        className="fixed inset-x-0 top-0 bottom-16 z-50 flex flex-col bg-white dark:bg-surface-darkest lg:hidden drawer-scrollbar-hidden overflow-hidden"
+        className="fixed inset-x-0 top-0 bottom-16 z-50 flex flex-col overflow-hidden bg-white dark:bg-surface-darkest lg:hidden drawer-scrollbar-hidden"
         style={{
           top: "0px",
           bottom: "64px",
@@ -54,146 +200,41 @@ export default function CartPage() {
         <MobileNavHeader hideBack={true} variant="close" />
 
         <div className="px-4 pt-5">
-          <h1 className="text-2xl font-semibold text-black dark:text-white">
-            My Cart
-          </h1>
+          <h1 className="text-2xl font-semibold text-black dark:text-white">Keranjang</h1>
         </div>
 
-        <div
-          className={clsx(
-            "flex-1 overflow-y-auto px-4 py-0 drawer-scrollbar-hidden",
-            "!px-2"
-          )}
-        >
-          {cart?.length === 0 ? (
-            <div className="mt-20 flex w-full flex-col items-center justify-center overflow-hidden">
-              <ShoppingCartIcon className="h-16" />
-              <p className="mt-6 text-center text-2xl font-bold">
-                Your cart is empty.
-              </p>
-            </div>
+        <div className={clsx("flex-1 overflow-y-auto px-4 py-0 drawer-scrollbar-hidden", "!px-2")}>
+          {isEmpty ? (
+            <EmptyCart />
           ) : (
             <div className="flex h-full flex-col justify-between">
-              <ul className="my-0 flex-grow overflow-auto py-0">
-                {Array.isArray(cart) &&
-                  cart?.map((item: CartItemEdge, i: number) => {
-                    const merchandiseSearchParams = {
-                      backUrl: "/cart",
-                    } as MerchandiseSearchParams;
-                    const merchandiseUrl = createUrl(
-                      `/product/${item?.node.productUrlKey}`,
-                      new URLSearchParams(merchandiseSearchParams),
-                    );
-                    const baseImage = safeParse<{ small_image_url?: string }>(
-                      item?.node?.baseImage,
-                    );
-
-                    return (
-                      <li key={i} className="flex w-full flex-col">
-                        <div
-                          className={clsx(
-                            "flex w-full flex-row justify-between py-4 px-1",
-                            "gap-1 xxs:gap-3"
-                          )}
-                        >
-                          <Link
-                            className="z-30 flex flex-row space-x-4"
-                            aria-label={`${item?.node?.name}`}
-                            href={merchandiseUrl}
-                          >
-                            <div className="relative h-16 w-16 cursor-pointer overflow-hidden rounded-md border border-neutral-300 bg-neutral-300 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:bg-neutral-800">
-                              <Image
-                                alt={
-                                  item?.node?.baseImage ||
-                                  item?.node?.name
-                                }
-                                className="h-full w-full object-cover"
-                                height={64}
-                                src={baseImage?.small_image_url || ""}
-                                width={74}
-                                onError={(e) =>
-                                  (e.currentTarget.src = NOT_IMAGE)
-                                }
-                              />
-                            </div>
-                            <div className="flex flex-1 flex-col text-base">
-                              <span className="line-clamp-1 font-outfit text-base font-medium">
-                                {item?.node?.name}
-                              </span>
-                                 {item.node.name !== DEFAULT_OPTION && (
-                            <p className="text-sm lowercase line-clamp-1 text-black dark:text-selected-white truncate" style={{maxWidth : "130px"}}>
-                              {item?.node?.sku}
-                            </p>
-                          )}
-                            </div>
-                          </Link>
-          
-                          <div className="flex h-16 flex-col justify-between">
-                            <Price
-                              amount={item?.node?.price}
-                              className="flex justify-end space-y-2 text-right font-outfit text-base font-medium"
-                              currencyCode={CURRENCY_CODE}
-                            />
-                            <div className="flex items-center gap-x-2">
-                              <DeleteItemButton item={item} />
-                              <div className="ml-auto flex h-9 flex-row items-center rounded-full border border-neutral-200 dark:border-neutral-700">
-                                <EditItemQuantityButton item={item} type="minus" />
-                                <p className="w-6 text-center"><span className="w-full text-sm">{item?.node?.quantity}</span></p>
-                                <EditItemQuantityButton item={item} type="plus" />
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </li>
-                    );
-                  })}
-              </ul>
-
-              <div className="border-0 border-t border-solid border-neutral-200 dark:border-dark-grey py-8 text-sm text-selected-black dark:text-selected-white">
-                {cartDetail?.cart?.taxAmount != null && cartDetail.cart.taxAmount > 0 && (
-                  <div className="mb-3 flex items-center justify-between">
-                    <p className="text-base font-normal text-black/[60%] dark:text-white">
-                      Taxes
-                    </p>
-                    <Price
-                      amount={String(cartDetail?.cart?.taxAmount ?? 0)}
-                      className="text-right text-base font-medium text-black dark:text-white"
-                      currencyCode={CURRENCY_CODE}
-                    />
-                  </div>
-                )}
-                <div className="mb-3 flex items-center justify-between pb-1">
-                  <p className="text-base font-normal text-black/[60%] dark:text-white">
-                    Total
-                  </p>
-                  <Price
-                    amount={String(cartDetail?.cart?.grandTotal ?? 0)}
-                    className="text-right text-base font-medium text-black dark:text-white"
-                    currencyCode={CURRENCY_CODE}
-                  />
-                </div>
-
-                <form action={redirectToCheckout}>
-                  <CheckoutButton
-                    cartDetails={cartObj?.items?.edges ?? []}
-                    isGuest={cartObj?.isGuest ?? false}
-                    isEmail={
-                      cartObj?.customerEmail ?? getLocalStorage(EMAIL)
-                    }
-                    isSelectShipping={
-                      cartObj?.selectedShippingRate != null
-                    }
-                    isSeclectAddress={isObject(billingAddress)}
-                    isSelectPayment={cartObj?.paymentMethod != null}
-                  />
-                </form>
-              </div>
+              <CartItemsList cart={cart} />
+              <CartSummary
+                cartDetail={cartDetail}
+                cartObj={cartObj}
+                billingAddress={billingAddress}
+              />
             </div>
           )}
         </div>
-
-
       </div>
+
+      {/* Desktop */}
+      <section className="mx-auto hidden w-full max-w-3xl px-4 py-10 lg:block xss:px-7.5">
+        <h1 className="mb-8 text-3xl font-semibold text-black dark:text-white">Keranjang</h1>
+        {isEmpty ? (
+          <EmptyCart />
+        ) : (
+          <div className="rounded-2xl border border-neutral-200 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
+            <CartItemsList cart={cart} isDesktop />
+            <CartSummary
+              cartDetail={cartDetail}
+              cartObj={cartObj}
+              billingAddress={billingAddress}
+            />
+          </div>
+        )}
+      </section>
     </>
   );
 }
@@ -238,7 +279,7 @@ function CheckoutButton({
         disabled={pending}
         type="submit"
       >
-        {pending ? <LoadingDots className="bg-white" /> : "Proceed to Checkout"}
+        {pending ? <LoadingDots className="bg-white" /> : "Lanjut ke Checkout"}
       </button>
     </>
   );

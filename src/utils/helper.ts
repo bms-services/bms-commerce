@@ -471,6 +471,48 @@ export function isRootCategory(category: {
   return extractNumericId(String(category.id ?? "")) === "1";
 }
 
+const CATEGORY_SLUGS = new Set([
+  "software-development",
+  "operations-strategy",
+]);
+
+/**
+ * Normalizes admin/footer/CMS URLs into valid storefront paths.
+ */
+export function normalizeStoreHref(url: string): string {
+  if (!url?.trim()) {
+    return "/";
+  }
+
+  const trimmed = url.trim();
+
+  if (
+    trimmed.startsWith("http://") ||
+    trimmed.startsWith("https://") ||
+    trimmed.startsWith("mailto:") ||
+    trimmed.startsWith("tel:") ||
+    trimmed.startsWith("#")
+  ) {
+    return trimmed;
+  }
+
+  if (trimmed.startsWith("/")) {
+    return trimmed;
+  }
+
+  if (trimmed.startsWith("search/")) {
+    return `/${trimmed}`;
+  }
+
+  const slug = trimmed.replace(/^\//, "");
+
+  if (CATEGORY_SLUGS.has(slug)) {
+    return `/search/${slug}`;
+  }
+
+  return `/${slug}`;
+}
+
 export const getAuthToken = (req: Request): string | undefined => {
   const authHeader = req.headers.get("Authorization");
   return authHeader?.split(" ")[1];

@@ -63,8 +63,30 @@ export default async function Footer() {
           )}
         />
       )}
-      <footer className="hidden lg:block border-t border-neutral-200 text-sm text-selected-black dark:border-neutral-700 dark:text-selected-white">
-        <div className="mx-auto flex w-full max-w-screen-2xl flex-col justify-between gap-6 gap-y-6 px-6 py-12 text-sm dark:border-neutral-700 min-[880px]:flex-row min-[880px]:gap-12 min-[880px]:gap-y-20 min-[880px]:px-4">
+      <footer className="border-t border-neutral-200 text-sm text-selected-black dark:border-neutral-700 dark:text-selected-white">
+        {/* Mobile quick links */}
+        <div className="border-b border-neutral-200 px-4 py-8 dark:border-neutral-800 lg:hidden">
+          <div className="mx-auto grid max-w-screen-2xl grid-cols-2 gap-6">
+            <div>
+              <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-neutral-500">Layanan</p>
+              <ul className="space-y-2 text-sm">
+                <li><Link href="/search/software-development" className="hover:underline">Software & Development</Link></li>
+                <li><Link href="/search/operations-strategy" className="hover:underline">Operations & Strategy</Link></li>
+                <li><Link href="/search" className="hover:underline">Semua Layanan</Link></li>
+              </ul>
+            </div>
+            <div>
+              <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-neutral-500">Perusahaan</p>
+              <ul className="space-y-2 text-sm">
+                <li><Link href="/tentang-kami" className="hover:underline">Tentang Kami</Link></li>
+                <li><Link href="/kontak" className="hover:underline">Kontak</Link></li>
+                <li><a href="https://bmsservices.id/harga" target="_blank" rel="noopener noreferrer" className="hover:underline">Estimasi Harga</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div className="mx-auto hidden w-full max-w-screen-2xl flex-col justify-between gap-6 gap-y-6 px-6 py-12 text-sm dark:border-neutral-700 min-[880px]:flex-row min-[880px]:gap-12 min-[880px]:gap-y-20 min-[880px]:px-4 lg:flex">
           <div className="flex flex-col gap-3.5">
             <Link
               className="flex items-center gap-2 md:pt-1 cursor-pointer"
@@ -117,14 +139,15 @@ export default async function Footer() {
         <div className="border-t border-neutral-200 py-6 text-sm dark:border-neutral-700">
           <div className="mx-auto flex w-full max-w-screen-2xl flex-col justify-center gap-1 px-4 md:flex-row">
             <p className="text-center">
-              &copy; {copyrightDate} {copyrightName}
-              {copyrightName.length && !copyrightName.endsWith(".")
-                ? "."
-                : ""}{" "}
-              All rights reserved.
+              &copy; {copyrightDate} {copyrightName}. Hak cipta dilindungi.
             </p>
             <hr className="mx-4 hidden h-4 w-px border-l border-neutral-400 md:inline-block" />
-            <p className="text-center">Designed in Bagisto</p>
+            <p className="text-center text-neutral-500 dark:text-neutral-400">
+              Software house Semarang —{" "}
+              <a href="https://bmsservices.id" target="_blank" rel="noopener noreferrer" className="hover:underline">
+                bmsservices.id
+              </a>
+            </p>
           </div>
         </div>
       </footer>

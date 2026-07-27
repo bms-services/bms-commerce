@@ -4,6 +4,7 @@ import { FC, useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Shimmer } from "@/components/common/Shimmer";
+import { normalizeStoreHref } from "@/utils/helper";
 
 interface ImageCarouselProps {
     options: {
@@ -147,7 +148,7 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ options }) => {
                         >
                             {img.link ? (
                                 <Link
-                                    href={`/search/${img.link}`}
+                                    href={normalizeStoreHref(img.link)}
                                     className="block h-full w-full"
                                     aria-label={`View ${altText}`}
                                 >

@@ -27,8 +27,8 @@ export default async function CategoriesPage() {
       .filter((item) => item.name && item.slug);
 
     categories = [
-      { id: "all", name: "All", slug: "" },
-      ...filtered.slice(0, 3),
+      { id: "all", name: "Semua", slug: "" },
+      ...filtered,
     ];
   } catch (error) {
     console.error("Error fetching categories:", error);

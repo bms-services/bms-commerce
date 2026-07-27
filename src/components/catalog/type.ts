@@ -217,6 +217,7 @@ export type ProductsSectionProps = {
   title: string;
   description: string;
   products: ProductSectionNode[];
+  viewAllHref?: string;
 };
 
 export interface ProductFilterAttributeResponse {

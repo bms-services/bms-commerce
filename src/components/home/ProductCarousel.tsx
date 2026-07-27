@@ -13,6 +13,13 @@ interface ProductCarouselProps {
   sortOrder?: number;
 }
 
+const CAROUSEL_DESCRIPTIONS: Record<string, string> = {
+  "Software & Development":
+    "Pengembangan software, website, e-commerce, dan aplikasi enterprise — dibangun khusus untuk bisnis Anda.",
+  "Operations & Strategy":
+    "Konsultasi IT, SEO, AI automation, dan dukungan berkelanjutan untuk operasional yang lebih efisien.",
+};
+
 const ProductCarousel: FC<ProductCarouselProps> = async ({
   options,
   itemCount = 4,
@@ -79,11 +86,22 @@ const ProductCarousel: FC<ProductCarouselProps> = async ({
     return null;
   }
 
+  const sectionTitle = title || "Layanan";
+  const sectionDescription =
+    CAROUSEL_DESCRIPTIONS[sectionTitle] ||
+    "Solusi digital end-to-end dari BMS Services untuk mendukung pertumbuhan bisnis Anda.";
+  const viewAllHref =
+    sectionTitle === "Software & Development"
+      ? "/search/software-development"
+      : sectionTitle === "Operations & Strategy"
+        ? "/search/operations-strategy"
+        : "/search";
+
   if (sortOrder === 2) {
     return (
       <ThreeItemGrid
-        title={title || "Products"}
-        description="Jelajahi layanan pengembangan software, website, dan aplikasi enterprise dari BMS Services."
+        title={sectionTitle}
+        description={sectionDescription}
         products={products.slice(0, 3).map((item) => ({
           id: item.id,
           name: item.name || "",
@@ -99,9 +117,10 @@ const ProductCarousel: FC<ProductCarouselProps> = async ({
 
   return (
     <Theme
-      title={title || "Products"}
-      description="Discover the latest trends! Fresh products just added—shop new styles, tech, and essentials before they're gone."
+      title={sectionTitle}
+      description={sectionDescription}
       products={products}
+      viewAllHref={viewAllHref}
     />
   );
 };

@@ -55,7 +55,7 @@ const Subscribe = () => {
       showToast(status?.apiRes?.msg, "warning");
     }
     if (status?.apiRes?.status === true) {
-      showToast("Successfully Subscribed", "success");
+      showToast("Berhasil berlangganan newsletter", "success");
     }
   }, [status]);
 
@@ -67,7 +67,7 @@ const Subscribe = () => {
     >
       <p className="mb-1 text-base font-semibold">Newsletter</p>
       <p className="font-sm font-normal">
-        Subscribe to our newsletter for exclusive offers!
+        Dapatkan update layanan dan penawaran terbaru dari BMS Services.
       </p>
 
       <div className="mt-4 flex gap-x-3 w-full max-w-[400px]">
@@ -76,10 +76,10 @@ const Subscribe = () => {
             type="email"
             aria-label="Email Address"
             {...register("email", {
-              required: "Email is required",
+              required: "Email wajib diisi",
               pattern: {
                 value: EMAIL_REGEX,
-                message: "Enter a valid email",
+                message: "Masukkan email yang valid",
               },
             })}
             className={clsx(
@@ -88,7 +88,7 @@ const Subscribe = () => {
                 ? "border-red-500 dark:border-red-500"
                 : ""
             )}
-            placeholder="Email Address"
+            placeholder="Alamat email"
           />
           {errors.email && (
             <p className="mt-1 absolute left-0 text-xs text-red-600 dark:text-red-400">
@@ -106,7 +106,7 @@ const Subscribe = () => {
           )}
           disabled={loading || isSubmitting}
           loading={loading || isSubmitting}
-          title="Subscribe"
+          title="Langganan"
           type="submit"
         />
       </div>

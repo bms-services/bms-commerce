@@ -1,4 +1,5 @@
 import { baseUrl } from "@/utils/constants";
+import { normalizeStoreHref } from "@/utils/helper";
 
 interface StaticContentProps {
   options: {
@@ -26,8 +27,8 @@ function prepareStaticHtml(html: string): string {
       return `src="${resolveAssetUrl(path)}"`;
     })
     .replace(
-      /\bhref="(?!https?:\/\/|\/|#|mailto:)([^"]+)"/g,
-      (_, slug: string) => `href="/search/${slug}"`,
+      /\bhref="(?!https?:\/\/|\/|#|mailto:|tel:)([^"]+)"/g,
+      (_, slug: string) => `href="${normalizeStoreHref(slug)}"`,
     );
 }
 

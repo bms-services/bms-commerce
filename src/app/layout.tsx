@@ -63,7 +63,7 @@ export default async function RootLayout({
   const branding = await getStoreChannel();
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="id" suppressHydrationWarning>
       <head>
       </head>
       <body className={clsx(

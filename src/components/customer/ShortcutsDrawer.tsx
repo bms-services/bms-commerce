@@ -10,7 +10,7 @@ import FaceBookIcon from "@components/common/icons/social-icon/FaceBookIcon";
 import InstaGramIcon from "@components/common/icons/social-icon/InstaGramIcon";
 import TwitterIcon from "@components/common/icons/social-icon/TwitterIcon";
 import { ThemeOptions, FooterColumns, ThemeCustomizationResult } from "@/types/theme/theme-customization";
-import { safeParse } from "@/utils/helper";
+import { safeParse, normalizeStoreHref } from "@/utils/helper";
 import { isArray } from "@/utils/type-guards";
 import { useForm } from "react-hook-form";
 import { RecoverPasswordFormState } from "@components/customer/types";
@@ -25,13 +25,7 @@ interface ShortcutsDrawerProps {
   onNavigate: () => void;
 }
 
-const getUrlparams = (url: string) => {
-  const splitUrl = url.split("/");
-  if (isArray(splitUrl) && splitUrl.length >= 1) {
-    return `/${splitUrl.at(splitUrl.length - 1)}`;
-  }
-  return "/";
-};
+const getUrlparams = (url: string) => normalizeStoreHref(url);
 
 export default function ShortcutsDrawer({ isOpen, onClose, onNavigate }: ShortcutsDrawerProps) {
   const { setTheme, resolvedTheme } = useTheme();
@@ -62,7 +56,7 @@ export default function ShortcutsDrawer({ isOpen, onClose, onNavigate }: Shortcu
     }
     if (status?.email) showToast(status?.email[0], "warning");
     if (status?.apiRes?.status === false) showToast(status?.apiRes?.msg, "warning");
-    if (status?.apiRes?.status === true) showToast("Successfully Subscribed", "success");
+    if (status?.apiRes?.status === true) showToast("Berhasil berlangganan newsletter", "success");
   }, [status]);
 
   useEffect(() => {
@@ -133,14 +127,14 @@ export default function ShortcutsDrawer({ isOpen, onClose, onNavigate }: Shortcu
 
             <div className="flex-1 overflow-y-auto drawer-scrollbar-hidden flex flex-col w-full px-4 pt-5 pb-8">
               <h2 className="font-outfit font-semibold text-2xl text-black dark:text-white leading-none mb-6">
-                Shortcuts
+                Menu Cepat
               </h2>
 
               <div className="flex flex-col gap-2 mb-6">
-                <h3 className="font-outfit font-semibold text-sm text-black/50 dark:text-white/50 leading-none">Theme</h3>
+                <h3 className="font-outfit font-semibold text-sm text-black/50 dark:text-white/50 leading-none">Tema</h3>
                 <div className="flex items-center justify-between h-[58px]">
                   <span className="font-outfit font-medium text-base text-black dark:text-white">
-                    {isDark ? "Dark" : "Light"}
+                    {isDark ? "Gelap" : "Terang"}
                   </span>
                   <div 
                     onClick={() => setTheme(isDark ? "light" : "dark")}
@@ -163,7 +157,7 @@ export default function ShortcutsDrawer({ isOpen, onClose, onNavigate }: Shortcu
 
               {isArray(column1) && column1.length > 0 && (
                 <div className="flex flex-col gap-4 mb-6">
-                  <h3 className="font-outfit font-semibold text-sm text-black/50 dark:text-white/50 leading-none">Company</h3>
+                  <h3 className="font-outfit font-semibold text-sm text-black/50 dark:text-white/50 leading-none">Layanan</h3>
                   <div className="flex flex-col gap-4">
                     {column1.map((item: ThemeOptions, index: number) => (
                       <Link
@@ -181,7 +175,7 @@ export default function ShortcutsDrawer({ isOpen, onClose, onNavigate }: Shortcu
 
               {isArray(column2) && column2.length > 0 && (
                 <div className="flex flex-col gap-4 mb-6">
-                  <h3 className="font-outfit font-semibold text-sm text-black/50 dark:text-white/50 leading-none">Support</h3>
+                  <h3 className="font-outfit font-semibold text-sm text-black/50 dark:text-white/50 leading-none">Perusahaan</h3>
                   <div className="flex flex-col gap-4">
                     {column2.map((item: ThemeOptions, index: number) => (
                       <Link
@@ -224,7 +218,7 @@ export default function ShortcutsDrawer({ isOpen, onClose, onNavigate }: Shortcu
                   <div className="flex flex-col gap-1">
                     <h3 className="font-outfit font-semibold text-base leading-[20px] text-black dark:text-white">Newsletter</h3>
                     <p className="font-outfit font-normal text-sm leading-[20px] text-black dark:text-white">
-                      Subscribe to our newsletter for exclusive offers!
+                      Dapatkan update layanan dan penawaran terbaru dari BMS Services.
                     </p>
                   </div>
                   
@@ -234,10 +228,10 @@ export default function ShortcutsDrawer({ isOpen, onClose, onNavigate }: Shortcu
                         type="email"
                         aria-label="Email Address"
                         {...register("email", {
-                          required: "Email is required",
+                          required: "Email wajib diisi",
                           pattern: {
                             value: EMAIL_REGEX,
-                            message: "Enter a valid email",
+                            message: "Masukkan email yang valid",
                           },
                         })}
                         className={clsx(
@@ -246,7 +240,7 @@ export default function ShortcutsDrawer({ isOpen, onClose, onNavigate }: Shortcu
                             ? "border-red-500"
                             : "border-white dark:border-neutral-800"
                         )}
-                        placeholder="Email address"
+                        placeholder="Alamat email"
                       />
                       <button
                         type="submit"
@@ -258,14 +252,14 @@ export default function ShortcutsDrawer({ isOpen, onClose, onNavigate }: Shortcu
                             "cursor-not-allowed opacity-50": isSubmitting,
                           }
                         )}
-                        title="Subscribe"
+                        title="Langganan"
                       >
                         {loading || isSubmitting ? (
                           <div className="flex items-center gap-1">
                             <LoadingDots className="bg-white !w-1 !h-1" />
                           </div>
                         ) : (
-                          "Subscribe"
+                          "Langganan"
                         )}
                       </button>
                     </div>

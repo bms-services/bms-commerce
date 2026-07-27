@@ -27,8 +27,8 @@ export async function CategoriesMenu({ type }: { type?: "mobile" | "desktop" }) 
     .filter((item) => item.name && item.slug);
 
   const menuData = [
-    { id: "all", name: "All", slug: "" },
-    ...filteredCategories.slice(0, 3),
+    { id: "all", name: "Semua", slug: "" },
+    ...filteredCategories,
   ];
 
   return (

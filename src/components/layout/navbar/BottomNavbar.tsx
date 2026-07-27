@@ -67,7 +67,7 @@ const BottomNavbar = memo(function BottomNavbar({
             <div className={getIconWrapperClass("home")}>
               <HomeIcon />
             </div>
-            <span className={activeTab === "home" ? "font-semibold font-[14px]" : "font-normal font-[14px]"}>Home</span>
+            <span className={activeTab === "home" ? "font-semibold font-[14px]" : "font-normal font-[14px]"}>Beranda</span>
           </Link>
 
           <Link
@@ -79,7 +79,7 @@ const BottomNavbar = memo(function BottomNavbar({
             <div className={getIconWrapperClass("category")}>
               <CategoryIcon />
             </div>
-            <span className={activeTab === "category" ? "font-semibold font-[14px]" : "font-normal font-[14px]"}>Categories</span>
+            <span className={activeTab === "category" ? "font-semibold font-[14px]" : "font-normal font-[14px]"}>Kategori</span>
           </Link>
 
           <Link
@@ -91,7 +91,7 @@ const BottomNavbar = memo(function BottomNavbar({
             <div className={getIconWrapperClass("cart")}>
               <OpenCart quantity={cartDetail?.cart?.itemsQty} className="!h-6 !w-6" />
             </div>
-            <span className={activeTab === "cart" ? "font-semibold font-[14px]" : "font-normal font-[14px]"}>Cart</span>
+            <span className={activeTab === "cart" ? "font-semibold font-[14px]" : "font-normal font-[14px]"}>Keranjang</span>
           </Link>
 
           <Suspense fallback={<IconSkeleton />}>
@@ -104,7 +104,7 @@ const BottomNavbar = memo(function BottomNavbar({
               <div className={getIconWrapperClass("account")}>
                 <OpenAuth className="!h-6 !w-6" />
               </div>
-              <span className={activeTab === "account" ? "font-semibold font-[14px]" : "font-normal font-[14px]"}>Account</span>
+              <span className={activeTab === "account" ? "font-semibold font-[14px]" : "font-normal font-[14px]"}>Akun</span>
             </Link>
           </Suspense>
 
