@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { isArray } from "@/utils/type-guards";
 import Grid from "@components/theme/ui/grid/Grid";
 import FilterList from "@components/theme/filters/FilterList";
@@ -36,6 +36,10 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { collection: categorySlug } = await params;
 
+  if (categorySlug === "root") {
+    return { title: "Categories" };
+  }
+
   const treeData = await cachedGraphQLRequest<TreeCategoriesResponse>(
     "category",
     GET_TREE_CATEGORIES,
@@ -63,6 +67,11 @@ export default async function CategoryPage({
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const { collection: categorySlug } = await params;
+
+  if (categorySlug === "root") {
+    redirect("/categories");
+  }
+
   const resolvedParams = await searchParams;
 
   const [treeData, filterAttributes] = await Promise.all([

@@ -4,6 +4,7 @@ import clsx from "clsx";
 import { cachedGraphQLRequest } from "@/lib/cached-graphql";
 import { GridTileImage } from "../theme/ui/grid/Tile";
 import { CURRENCY_CODE, NOT_IMAGE } from "@/utils/constants";
+import { isRootCategory } from "@/utils/helper";
 import { GET_HOME_CATEGORIES } from "@/graphql";
 import { CategoriesResponse, CategoryEdge } from "@/types/category/type";
 
@@ -84,7 +85,7 @@ const CategoryCarousel: FC<CategoryCarouselProps> = async ({
       data?.categories?.edges?.map((edge) => edge.node) || [];
 
     topCategories = categories
-      .filter((category) => category.id !== "1")
+      .filter((category) => !isRootCategory(category))
       .sort((a, b) => (a.position || 0) - (b.position || 0))
       .slice(0, 4);
   } catch (error) {

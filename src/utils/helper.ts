@@ -459,6 +459,18 @@ export function extractNumericId(id: string | number): string | undefined {
   return match ? match[0] : undefined;
 }
 
+export function isRootCategory(category: {
+  id?: string | number;
+  translation?: { slug?: string; name?: string };
+}): boolean {
+  const slug = category.translation?.slug?.toLowerCase();
+  if (slug === "root") {
+    return true;
+  }
+
+  return extractNumericId(String(category.id ?? "")) === "1";
+}
+
 export const getAuthToken = (req: Request): string | undefined => {
   const authHeader = req.headers.get("Authorization");
   return authHeader?.split(" ")[1];
