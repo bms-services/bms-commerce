@@ -71,13 +71,19 @@ export async function graphqlRequestCached<
   }
 
   const client = makeClient();
-  const result = await client.query({
-    query: gql(queryString),
-    variables,
-    fetchPolicy: "network-only",
-  });
 
-  return result.data as TData;
+  try {
+    const result = await client.query({
+      query: gql(queryString),
+      variables,
+      fetchPolicy: "network-only",
+    });
+
+    return result.data as TData;
+  } catch (error) {
+    console.error("GraphQL cache request failed:", error);
+    return null as TData;
+  }
 }
 
 export async function cachedGraphQLRequest<
