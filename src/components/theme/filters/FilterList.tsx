@@ -100,7 +100,7 @@ function FilterItemList({
         {(item: FilterAttributeOption) => (
             <SelectItem
               key={item.id}
-              textValue={item.id}
+              textValue={item.adminName}
               className="text-neutral-800 dark:text-neutral-200"
             >
             <div className="flex items-center gap-2">

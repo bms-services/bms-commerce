@@ -86,10 +86,10 @@ export async function generateMetadata({
   const searchQuery = params?.q as string | undefined;
 
   return generateMetadataForPage("search", {
-    title: searchQuery ? `Search: ${searchQuery}` : "Search Products",
+    title: searchQuery ? `Cari: ${searchQuery}` : "Semua Layanan",
     description: searchQuery
-      ? `Search results for "${searchQuery}"`
-      : "Search for products in our store",
+      ? `Hasil pencarian untuk "${searchQuery}"`
+      : "Jelajahi semua layanan software dan digital dari BMS Services",
     image: "/search-og.jpg",
   });
 }
@@ -177,20 +177,25 @@ export default async function SearchPage({
       <MobileSearchBar />
       {hasProducts && (
         <h2 className="text-2xl sm:text-4xl font-semibold mx-auto mt-7.5 w-full max-w-screen-2xl my-3 mx-auto px-4 xss:px-7.5">
-          All Top Products
+          Semua Layanan
         </h2>
       )}
 
-      {hasProducts && (
+      {hasProducts && filterAttributes.length > 0 && (
         <div className="my-10 hidden gap-4 md:flex md:items-baseline md:justify-between w-full mx-auto max-w-screen-2xl px-4 xss:px-7.5">
           <FilterList filterAttributes={filterAttributes} />
-          <SortOrder sortOrders={SortByFields} title="Sort by" />
+          <SortOrder sortOrders={SortByFields} title="Urutkan" />
         </div>
       )}
-      {hasProducts && (
+      {hasProducts && filterAttributes.length > 0 && (
         <div className="flex items-center justify-between gap-4 py-8 md:hidden mx-auto w-full max-w-screen-2xl px-4 xss:px-7.5">
           <MobileFilter filterAttributes={filterAttributes} />
-          <SortOrder sortOrders={SortByFields} title="Sort by" />
+          <SortOrder sortOrders={SortByFields} title="Urutkan" />
+        </div>
+      )}
+      {hasProducts && filterAttributes.length === 0 && (
+        <div className="my-6 flex justify-end w-full mx-auto max-w-screen-2xl px-4 xss:px-7.5 md:my-10">
+          <SortOrder sortOrders={SortByFields} title="Urutkan" />
         </div>
       )}
 

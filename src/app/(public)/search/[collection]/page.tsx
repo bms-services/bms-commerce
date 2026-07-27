@@ -2,9 +2,7 @@ import { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { isArray } from "@/utils/type-guards";
 import Grid from "@components/theme/ui/grid/Grid";
-import FilterList from "@components/theme/filters/FilterList";
 import SortOrder from "@components/theme/filters/SortOrder";
-import MobileFilter from "@components/theme/filters/MobileFilter";
 import ProductGridItems from "@components/catalog/product/ProductGridItems";
 import Pagination from "@components/catalog/Pagination";
 import {
@@ -14,7 +12,7 @@ import {
   GET_FILTER_PRODUCTS,
   GET_TREE_CATEGORIES,
 } from "@/graphql";
-import { cachedGraphQLRequest, cachedCategoryRequest, getFilterAttributes } from "@/lib/cached-graphql";
+import { cachedGraphQLRequest, cachedCategoryRequest } from "@/lib/cached-graphql";
 import { SortByFields } from "@utils/constants";
 import SearchNoResult from "@/components/theme/search/SearchNoResult";
 import { CategoryDetail } from "@components/theme/search/CategoryDetail";
@@ -74,14 +72,11 @@ export default async function CategoryPage({
 
   const resolvedParams = await searchParams;
 
-  const [treeData, filterAttributes] = await Promise.all([
-    cachedGraphQLRequest<TreeCategoriesResponse>(
-      "category",
-      GET_TREE_CATEGORIES,
-      { parentId: 1 }
-    ),
-    getFilterAttributes(),
-  ]);
+  const treeData = await cachedGraphQLRequest<TreeCategoriesResponse>(
+    "category",
+    GET_TREE_CATEGORIES,
+    { parentId: 1 }
+  );
 
   const categories = treeData?.treeCategories || [];
   const categoryItem = findCategoryBySlug(categories, categorySlug);
@@ -150,13 +145,8 @@ export default async function CategoryPage({
           />
         </Suspense>
 
-        <div className="my-10 hidden gap-4 md:flex md:items-baseline md:justify-between w-full max-w-screen-2xl mx-auto px-4">
-          <FilterList filterAttributes={filterAttributes} />
-          <SortOrder sortOrders={SortByFields} title="Sort by" />
-        </div>
-        <div className="flex items-center justify-between gap-4 py-8 md:hidden w-full max-w-screen-2xl mx-auto px-4">
-          <MobileFilter filterAttributes={filterAttributes} />
-          <SortOrder sortOrders={SortByFields} title="Sort by" />
+        <div className="my-6 flex justify-end w-full max-w-screen-2xl mx-auto px-4 md:my-10">
+          <SortOrder sortOrders={SortByFields} title="Urutkan" />
         </div>
 
         {isArray(products) && products.length > 0 ? (
