@@ -1,11 +1,12 @@
 import { Outfit } from "next/font/google";
 import "./globals.css";
 import { GlobalProviders } from "@/providers";
-import { generateMetadataForPage } from "@utils/helper";
-import { staticSeo } from "@utils/metadata";
 import { SpeculationRules } from "@components/theme/SpeculationRules";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
+import { getStoreChannel } from "@/lib/store-channel";
+import { BASE_URL } from "@/utils/constants";
 import clsx from "clsx";
+import type { Metadata } from "next";
 
 
 const __lr = String.fromCharCode(100,115,118,45,50,48,50,53,46,48,52,46,49,57,45,55,101,50,57);
@@ -29,15 +30,38 @@ export const outfit = Outfit({
   preload: true,
 });
 
-export async function generateMetadata() {
-  return generateMetadataForPage("", staticSeo.default);
+export async function generateMetadata(): Promise<Metadata> {
+  const channel = await getStoreChannel();
+
+  return {
+    metadataBase: new URL(BASE_URL || "http://localhost:3000"),
+    title: channel.metaTitle || channel.name,
+    description: channel.metaDescription || channel.description,
+    keywords: channel.metaKeywords || undefined,
+    openGraph: {
+      title: channel.metaTitle || channel.name,
+      description: channel.metaDescription || channel.description,
+      siteName: channel.name,
+      type: "website",
+      ...(channel.logoUrl ? { images: [{ url: channel.logoUrl }] } : {}),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: channel.metaTitle || channel.name,
+      description: channel.metaDescription || channel.description,
+      ...(channel.logoUrl ? { images: [channel.logoUrl] } : {}),
+    },
+    ...(channel.faviconUrl ? { icons: { icon: channel.faviconUrl } } : {}),
+  };
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const branding = await getStoreChannel();
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -48,7 +72,7 @@ export default function RootLayout({
       )}>
         <main>
           <ErrorBoundary>
-            <GlobalProviders>
+            <GlobalProviders branding={branding}>
               {children}
             </GlobalProviders>
             <SpeculationRules />

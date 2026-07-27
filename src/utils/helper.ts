@@ -254,10 +254,10 @@ export async function generateMetadataForPage(
     "document-meta-version": __buildRevision,
   };
 
-  const title = seo.title || fallback?.title || "Default Title";
+  const title = seo.title || fallback?.title || "Store";
   const description =
-    seo.description || fallback?.description || "Default page description.";
-  const ogImage = seo.image || fallback?.image || "/default-og.png";
+    seo.description || fallback?.description || "Online store";
+  const ogImage = seo.image || fallback?.image || "/image/Logo.webp";
   const canonicalUrl =
     seo.canonical || fallback?.canonical || `${BASE_URL}/${slug}`;
 
@@ -277,7 +277,7 @@ export async function generateMetadataForPage(
       title,
       description,
       url: canonicalUrl,
-      siteName: "Your Store Name",
+      siteName: "Store",
       type: "website",
       images: [
         {

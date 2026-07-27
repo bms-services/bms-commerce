@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { isObject } from "@/utils/type-guards";
 import { getThemeCustomization } from "@/utils/bagisto";
+import { getStoreChannel } from "@/lib/store-channel";
 import LogoIcon from "@components/common/icons/LogoIcon";
 import FaceBookIcon from "@components/common/icons/social-icon/FaceBookIcon";
 import InstaGramIcon from "@components/common/icons/social-icon/InstaGramIcon";
@@ -12,7 +13,6 @@ import ServiceContent from "./ServiceContent";
 import { ThemeCustomizationTranslationEdge, FooterColumns, ThemeOptions } from "@/types/theme/theme-customization";
 import { safeParse } from "@/utils/helper";
 import { JSX } from "react";
-const { COMPANY_NAME } = process.env;
 
 async function getCopyrightDate() {
 
@@ -26,8 +26,11 @@ export default async function Footer() {
   const copyrightDate = await getCopyrightDate();
   const skeleton =
     "w-full h-6 animate-pulse rounded bg-neutral-200 dark:bg-neutral-700";
-  const menu = await getThemeCustomization();
-  const copyrightName = COMPANY_NAME || "";
+  const [menu, channel] = await Promise.all([
+    getThemeCustomization(),
+    getStoreChannel(),
+  ]);
+  const copyrightName = channel.name;
   const services =
     menu?.services_content?.themeCustomizations?.edges?.[0]?.node;
 
@@ -80,7 +83,7 @@ export default async function Footer() {
                   <Link
                     key={item.title ?? index}
                     href={item.url}
-                    aria-label={`Visit Bagisto Store on ${item.title}`}
+                    aria-label={`Visit ${channel.name} on ${item.title}`}
                     title={item.title}
                     target="_blank"
                     className="cursor-pointer"
