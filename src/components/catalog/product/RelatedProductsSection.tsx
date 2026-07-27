@@ -7,7 +7,7 @@ import { Price } from "@/components/theme/ui/Price";
 import ProductCardActions from "@/components/catalog/product/ProductCardActions";
 import { WishlistToggle } from "@/components/catalog/product/WishlistToggle";
 import { CompareToggle } from "@/components/catalog/product/CompareToggle";
-import { baseUrl, getImageUrl, NOT_IMAGE } from "@/utils/constants";
+import { baseUrl, CURRENCY_CODE, getImageUrl, NOT_IMAGE } from "@/utils/constants";
 
 export async function RelatedProductsSection({
   fullPath,
@@ -112,19 +112,19 @@ export async function RelatedProductsSection({
                       <Price
                         amount={String(ProductPrice)}
                         className="font-outfit text-xs font-medium text-selected-black line-through decoration-neutral-500 decoration-2"
-                        currencyCode="USD"
+                        currencyCode={CURRENCY_CODE}
                       />
                       <Price
                         amount={String(item.specialPrice)}
                         className="font-outfit text-lg font-medium leading-none text-black dark:text-white"
-                        currencyCode="USD"
+                        currencyCode={CURRENCY_CODE}
                       />
                     </div>
                   ) : (
                     <Price
                       amount={String(ProductPrice)}
                       className="font-outfit text-lg font-medium leading-none text-black dark:text-white"
-                      currencyCode="USD"
+                      currencyCode={CURRENCY_CODE}
                     />
                   )}
                 </div>

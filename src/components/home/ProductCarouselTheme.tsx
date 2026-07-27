@@ -1,6 +1,6 @@
 import { ProductCard } from "@components/catalog/product/ProductCard";
 import { ProductsSectionProps } from "@components/catalog/type";
-import { baseUrl, getImageUrl, NOT_IMAGE } from "@utils/constants";
+import { baseUrl, CURRENCY_CODE, getImageUrl, NOT_IMAGE } from "@utils/constants";
 import { resolveCardPrice } from "@utils/helper";
 
 const Theme = ({ title, description, products }: ProductsSectionProps) => {
@@ -28,7 +28,7 @@ const Theme = ({ title, description, products }: ProductsSectionProps) => {
             return (
               <ProductCard
                 key={item.id ?? index}
-                currency="USD"
+                currency={CURRENCY_CODE}
                 imageUrl={imageUrl || ""}
                 price={String(ProductPrice)}
                 product={{

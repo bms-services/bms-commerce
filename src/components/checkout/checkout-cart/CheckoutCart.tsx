@@ -73,7 +73,7 @@ export default function CheckoutCart({
                             <Price
                               amount={item?.node?.price}
                               className="space-y-2 text-start font-outfit text-lg font-medium xl:text-right"
-                              currencyCode={"USD"}
+                              currencyCode={CURRENCY_CODE}
                             />
                           </div>
                         </div>
@@ -82,7 +82,7 @@ export default function CheckoutCart({
                         <Price
                           amount={item?.node?.price}
                           className="space-y-2 text-start font-outfit text-lg font-medium xl:text-right"
-                          currencyCode={"USD"}
+                          currencyCode={CURRENCY_CODE}
                         />
                       </div>
                     </div>

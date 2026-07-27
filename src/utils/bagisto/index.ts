@@ -127,7 +127,7 @@ import { GET_CUSTOMER_REVIEWS } from "@/graphql/customer/queries/GetCustomerRevi
 import { GET_CUSTOMER_ADDRESSES } from "@/graphql/customer/queries/GetCustomerAddresses";
 import { CREATE_CUSTOMER_ADDRESS } from "@/graphql/customer/mutations/CreateCustomerAddress";
 import { DocumentNode } from "graphql";
-import { GRAPHQL_URL } from "@/utils/constants";
+import { CURRENCY_CODE, GRAPHQL_URL } from "@/utils/constants";
 import {
   GET_FOOTER,
   GET_THEME_CUSTOMIZATION,
@@ -259,7 +259,7 @@ export async function bagistoFetchNoSession<T>({
         "Content-Type": "application/json",
         "X-STOREFRONT-KEY": STOREFRONT_KEY,
         "x-locale": "en",
-        "x-currency": "USD",
+        "x-currency": CURRENCY_CODE,
         ...headers,
       },
       body: JSON.stringify({

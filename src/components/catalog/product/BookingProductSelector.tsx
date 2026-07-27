@@ -8,6 +8,7 @@ import { Price } from "@components/theme/ui/Price";
 import { BookingProduct, BookingSelectionData, BookingSlotItem, BookingSlotGroup, BookingSlotsQueryData, RentalBookingSlotsQueryData } from "@/types/category/type";
 import { CustomDatePicker } from "@components/ui/CustomDatePicker";
 import { CustomSlotSelect } from "@components/ui/CustomSlotSelect";
+import { CURRENCY_CODE } from "@/utils/constants";
 
 
 interface BookingProductSelectorProps {
@@ -105,7 +106,7 @@ const AppointmentBookingSelector: React.FC<BookingProductSelectorProps> = ({
 const EventBookingSelector: React.FC<BookingProductSelectorProps> = ({
     bookingProduct,
     onSelectionChange,
-    currencyCode = "USD",
+    currencyCode = CURRENCY_CODE,
 }) => {
     const [selectedTickets, setSelectedTickets] = useState<Record<string, boolean>>(() => {
         const initial: Record<string, boolean> = {};

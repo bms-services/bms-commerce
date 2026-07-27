@@ -3,7 +3,7 @@ import Link from "next/link";
 import clsx from "clsx";
 import { cachedGraphQLRequest } from "@/lib/cached-graphql";
 import { GridTileImage } from "../theme/ui/grid/Tile";
-import { NOT_IMAGE } from "@/utils/constants";
+import { CURRENCY_CODE, NOT_IMAGE } from "@/utils/constants";
 import { GET_HOME_CATEGORIES } from "@/graphql";
 import { CategoriesResponse, CategoryEdge } from "@/types/category/type";
 
@@ -47,7 +47,7 @@ const MobileCategoryItem: FC<MobileCategoryItemProps> = ({
             title: category.translation.name || "",
             page: "category",
             amount: "0",
-            currencyCode: "USD",
+            currencyCode: CURRENCY_CODE,
           }}
           priority={priority}
           sizes={
@@ -150,7 +150,7 @@ const CategoryCarousel: FC<CategoryCarouselProps> = async ({
                       title: category.translation.name || "",
                       page: "category",
                       amount: "0",
-                      currencyCode: "USD",
+                      currencyCode: CURRENCY_CODE,
                     }}
                     src={category.logoUrl || NOT_IMAGE}
                   />

@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useState } from "react";
 import { MinusIcon, PlusIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import { useSearchParams } from "next/navigation";
@@ -10,7 +11,7 @@ import LoadingDots from "@components/common/icons/LoadingDots";
 import { getVariantInfo, VariantSuperAttribute } from "@utils/hooks/useVariantInfo";
 import { safeParse } from "@utils/helper";
 import { ProductSwatchReview, BookingProduct, BookingSelectionData, SuperAttributeOption, GroupedProductNode, BundleOptionNode } from "@/types/category/type";
-import { useState, useCallback } from "react";
+import { CURRENCY_CODE } from "@/utils/constants";
 import dynamic from "next/dynamic";
 
 const GroupedProductSelector = dynamic(
@@ -363,7 +364,7 @@ export function AddToCart({
           key={productId}
           bundleOptions={productSwatchReview?.bundleOptions}
           basePrice={parseFloat(String(productSwatchReview?.price)) || 0}
-          currencyCode={productSwatchReview?.priceHtml?.currencyCode || "USD"}
+          currencyCode={productSwatchReview?.priceHtml?.currencyCode || CURRENCY_CODE}
           onSelectionChange={handleBundleSelectionChange}
         />
       )}

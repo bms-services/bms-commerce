@@ -1,7 +1,9 @@
+import { CURRENCY_CODE, CURRENCY_LOCALE } from "@/utils/constants";
+
 export const Price = ({
   amount,
   className,
-  currencyCode = "USD",
+  currencyCode = CURRENCY_CODE,
   ...rest
 }: {
   amount: string | number | undefined;
@@ -9,10 +11,11 @@ export const Price = ({
   currencyCode?: string;
 } & React.ComponentProps<"p">) => (
   <p className={className} suppressHydrationWarning={true} {...rest}>
-    {`${new Intl.NumberFormat(undefined, {
+    {`${new Intl.NumberFormat(CURRENCY_LOCALE, {
       style: "currency",
       currency: currencyCode,
       currencyDisplay: "narrowSymbol",
+      maximumFractionDigits: currencyCode === "IDR" ? 0 : 2,
     }).format(parseFloat(String(amount ?? 0)))}`}
   </p>
 );

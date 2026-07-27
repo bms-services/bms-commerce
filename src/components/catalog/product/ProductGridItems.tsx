@@ -1,4 +1,4 @@
-import { baseUrl, getImageUrl, NOT_IMAGE } from "@/utils/constants";
+import { baseUrl, CURRENCY_CODE, getImageUrl, NOT_IMAGE } from "@/utils/constants";
 import { resolveCardPrice } from "@/utils/helper";
 import { ProductCard } from "./ProductCard";
 import { ProductNode } from "../type";
@@ -13,7 +13,7 @@ export default function ProductGridItems({
   return products.map((product, index) => {
     const imageUrl = getImageUrl(product?.baseImageUrl, baseUrl, NOT_IMAGE);
     const price = resolveCardPrice(product);
-    const currency = product?.priceHtml?.currencyCode ?? "USD";
+    const currency = product?.priceHtml?.currencyCode ?? CURRENCY_CODE;
     return (
       <ProductCard
         key={product?.id ?? index}

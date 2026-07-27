@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import { ShoppingCartIcon } from "@heroicons/react/24/outline";
-import { DEFAULT_OPTION, NOT_IMAGE } from "@/utils/constants";
+import { CURRENCY_CODE, DEFAULT_OPTION, NOT_IMAGE } from "@/utils/constants";
 import { useAppSelector } from "@/store/hooks";
 import { Price } from "@/components/theme/ui/Price";
 import { DeleteItemButton } from "@/components/common/icons/cart/DeleteItemButton";
@@ -132,7 +132,7 @@ export default function CartPage() {
                             <Price
                               amount={item?.node?.price}
                               className="flex justify-end space-y-2 text-right font-outfit text-base font-medium"
-                              currencyCode={"USD"}
+                              currencyCode={CURRENCY_CODE}
                             />
                             <div className="flex items-center gap-x-2">
                               <DeleteItemButton item={item} />
@@ -158,7 +158,7 @@ export default function CartPage() {
                     <Price
                       amount={String(cartDetail?.cart?.taxAmount ?? 0)}
                       className="text-right text-base font-medium text-black dark:text-white"
-                      currencyCode={"USD"}
+                      currencyCode={CURRENCY_CODE}
                     />
                   </div>
                 )}
@@ -169,7 +169,7 @@ export default function CartPage() {
                   <Price
                     amount={String(cartDetail?.cart?.grandTotal ?? 0)}
                     className="text-right text-base font-medium text-black dark:text-white"
-                    currencyCode={"USD"}
+                    currencyCode={CURRENCY_CODE}
                   />
                 </div>
 

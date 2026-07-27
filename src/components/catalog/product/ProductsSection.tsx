@@ -1,8 +1,7 @@
 
-import { NOT_IMAGE } from "@/utils/constants";
-import Grid from "../../theme/ui/grid/Grid";
-import { baseUrl, getImageUrl } from "@/utils/constants";
+import { NOT_IMAGE, baseUrl, CURRENCY_CODE, getImageUrl } from "@/utils/constants";
 import { resolveCardPrice } from "@/utils/helper";
+import Grid from "@/components/theme/ui/grid/Grid";
 import { ProductCard } from "./ProductCard";
 import { ProductsSectionProps } from "../type";
 
@@ -24,7 +23,7 @@ export function ProductsSection({ title, description, products }: ProductsSectio
           return (
             <ProductCard
               key={item.id ?? index}
-              currency="USD"
+              currency={CURRENCY_CODE}
               imageUrl={imageUrl || ""}
               price={String(ProductPrice)}
               product={{

@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import { FilterDataTypes } from "@/types/types";
 import { CartItemEdge, CartItemsConnection } from "@/types/cart/type";
 import { isArray } from "./type-guards";
-import { BASE_URL } from "./constants";
+import { BASE_URL, CURRENCY_CODE, CURRENCY_LOCALE } from "./constants";
 import { ProductData } from "@components/catalog/type";
 import { CategoryNode } from "@/types/theme/category-tree";
 import { ProductReview } from "@/types/category/type";
@@ -418,7 +418,7 @@ export function safeCurrencyCode(product: {
     return product.price.currencyCode;
   }
 
-  return "USD";
+  return CURRENCY_CODE;
 }
 
 export function throttle<T extends (...args: never[]) => unknown>(
@@ -559,13 +559,17 @@ export const resolveCardPrice = (product: {
 };
 
 
-export const formatPrice = (amount: string | number | undefined, currency: string = "USD") => {
+export const formatPrice = (
+  amount: string | number | undefined,
+  currency: string = CURRENCY_CODE,
+) => {
     if (amount === undefined || amount === null) return "";
     const parsed = typeof amount === "string" ? parseFloat(amount) : amount;
     if (isNaN(parsed)) return "";
-    return new Intl.NumberFormat(undefined, {
+    return new Intl.NumberFormat(CURRENCY_LOCALE, {
         style: "currency",
         currency,
         currencyDisplay: "narrowSymbol",
+        maximumFractionDigits: currency === "IDR" ? 0 : 2,
     }).format(parsed);
 };

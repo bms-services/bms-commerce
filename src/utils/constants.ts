@@ -317,4 +317,5 @@ export const COMPARE_AUTH_KEY = "compare_auth";
 export const COMPARE_DEFAULT_TTL_MS = 5 * 60 * 1000;
 
 
-export const CURRENCY_CODE = "USD";
+export const CURRENCY_CODE = process.env.NEXT_PUBLIC_CURRENCY_CODE ?? "IDR";
+export const CURRENCY_LOCALE = process.env.NEXT_PUBLIC_CURRENCY_LOCALE ?? "id-ID";

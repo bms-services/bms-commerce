@@ -1,6 +1,7 @@
 import { FC } from "react";
 import Link from "next/link";
 
+import { CURRENCY_CODE } from "@/utils/constants";
 import { GridTileImage } from "@/components/theme/ui/grid/Tile";
 
 interface ThreeItemGridProps {
@@ -63,7 +64,7 @@ function ThreeItemGridItem({ product, size, priority }: {
                         position: size === 'full' ? 'center' : 'bottom',
                         title: product.name,
                         amount: String(product.type === 'configurable' || product.type === 'grouped' || product.type === 'bundle' ? (product.minimumPrice || '0') : (product.price || '0')),
-                        currencyCode: 'USD',
+                        currencyCode: CURRENCY_CODE,
                     }}
                 />
             </Link>
@@ -93,7 +94,7 @@ function MobileThreeItemGridItem({ product, priority }: {
                         position: 'center',
                         title: product.name,
                         amount: String(product.type === 'configurable' || product.type === 'grouped' || product.type === 'bundle' ? (product.minimumPrice || '0') : (product.price || '0')),
-                        currencyCode: 'USD',
+                        currencyCode: CURRENCY_CODE,
                     }}
                 />
             </Link>
