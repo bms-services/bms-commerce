@@ -1,11 +1,21 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { configHeader } from '@/utils/constants';
 import type { NextConfig } from "next";
+
+const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   typescript: {
     ignoreBuildErrors: false,
   },
+  turbopack: {
+    root: projectRoot,
+  },
+  serverExternalPackages: ["graphql"],
+  devIndicators: false,
+  outputFileTracingRoot: projectRoot,
   images: {
     unoptimized: true,
     formats: ["image/avif", "image/webp"],
@@ -34,6 +44,10 @@ const nextConfig: NextConfig = {
   },
 
   async headers() {
+    if (process.env.NODE_ENV === "development") {
+      return configHeader.filter((header) => !header.source.startsWith("/_next/"));
+    }
+
     return configHeader;
   },
   compress: true,

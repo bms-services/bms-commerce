@@ -13,7 +13,8 @@
  * request-time APIs such as `cookies()` or `headers()`.
  */
 import { cacheLife, cacheTag } from "next/cache";
-import { type DocumentNode, type OperationVariables } from "@apollo/client";
+import { gql, type DocumentNode, type OperationVariables } from "@apollo/client";
+import { print } from "graphql";
 import { getRevalidateTime, type CacheLifeOption } from "@/lib/graphql-fetch";
 import makeClient from "@/lib/apollo-client";
 import {
@@ -55,7 +56,7 @@ export async function graphqlRequestCached<
   TData = unknown,
   TVariables extends OperationVariables = OperationVariables,
 >(
-  query: DocumentNode,
+  queryString: string,
   variables: TVariables | undefined,
   options: { tags?: string[]; life?: CacheLifeOption },
 ): Promise<TData> {
@@ -71,7 +72,7 @@ export async function graphqlRequestCached<
 
   const client = makeClient();
   const result = await client.query({
-    query,
+    query: gql(queryString),
     variables,
     fetchPolicy: "network-only",
   });
@@ -88,7 +89,7 @@ export async function cachedGraphQLRequest<
   variables?: TVariables,
 ): Promise<TData> {
   const config = getPageCacheConfig(page);
-  return graphqlRequestCached<TData, TVariables>(query, variables, config);
+  return graphqlRequestCached<TData, TVariables>(print(query), variables, config);
 }
 
 export async function cachedProductRequest<
@@ -100,7 +101,7 @@ export async function cachedProductRequest<
   variables?: TVariables,
 ): Promise<TData> {
   const config = getProductCacheConfig(productId);
-  return graphqlRequestCached<TData, TVariables>(query, variables, config);
+  return graphqlRequestCached<TData, TVariables>(print(query), variables, config);
 }
 
 export async function cachedCategoryRequest<
@@ -112,7 +113,7 @@ export async function cachedCategoryRequest<
   variables?: TVariables,
 ): Promise<TData> {
   const config = getCategoryCacheConfig(categoryId);
-  return graphqlRequestCached<TData, TVariables>(query, variables, config);
+  return graphqlRequestCached<TData, TVariables>(print(query), variables, config);
 }
 
 /**
