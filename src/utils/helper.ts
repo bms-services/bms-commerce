@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import { FilterDataTypes } from "@/types/types";
 import { CartItemEdge, CartItemsConnection } from "@/types/cart/type";
 import { isArray } from "./type-guards";
-import { BASE_URL, baseUrl } from "./constants";
+import { BASE_URL } from "./constants";
 import { ProductData } from "@components/catalog/type";
 import { CategoryNode } from "@/types/theme/category-tree";
 import { ProductReview } from "@/types/category/type";
@@ -268,7 +268,7 @@ export async function generateMetadataForPage(
   };
 
   return {
-    metadataBase: new URL(baseUrl || BASE_URL || "http://localhost:3000"),
+    metadataBase: new URL(BASE_URL || "http://localhost:3000"),
 
     title,
     description,

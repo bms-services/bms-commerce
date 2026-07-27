@@ -1,9 +1,10 @@
 import { FC, Suspense } from "react";
 import { safeParse } from "@utils/helper";
-import { CategoryCarouselOptions, ImageCarouselOptions, ProductCarouselOptions, ThemeCustomizationResponse } from "@/types/theme/theme-customization";
+import { CategoryCarouselOptions, ImageCarouselOptions, ProductCarouselOptions, StaticContentOptions, ThemeCustomizationResponse } from "@/types/theme/theme-customization";
 import ImageCarousel from "./ImageCarousel";
 import ProductCarousel from "./ProductCarousel";
 import CategoryCarousel from "./CategoryCarousel";
+import StaticContent from "./StaticContent";
 import { MobileSearchBar } from "@components/layout/navbar/MobileSearch";
 import { CategoryCarouselSkeleton } from "@components/common/skeleton/CategoryCarouselSkeleton";
 import { ThemeSkeleton } from "@components/common/skeleton/ThemeSkeleton";
@@ -66,6 +67,13 @@ const RenderThemeCustomization: FC<RenderThemeCustomizationProps> = ({ themeCust
                                 <Suspense key={node.id} fallback={<CategoryCarouselSkeleton />}>
                                     <CategoryCarousel options={options as CategoryCarouselOptions} />
                                 </Suspense>
+                            );
+                        case "static_content":
+                            return (
+                                <StaticContent
+                                    key={node.id}
+                                    options={options as StaticContentOptions}
+                                />
                             );
                         default:
                             return null;
