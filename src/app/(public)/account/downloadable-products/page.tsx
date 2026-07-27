@@ -14,7 +14,7 @@ import ScrollableContainer from "@/components/common/ScrollableContainer";
 export default async function DownloadableProductsPage({
     searchParams,
 }: {
-    searchParams: { [key: string]: string | string[] | undefined };
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
     const params = await searchParams;
     const limit = Number(params?.limit) || 10;

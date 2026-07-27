@@ -14,7 +14,7 @@ import ReviewPagination from "@components/customer-detail/review/ReviewPaginatio
 export default async function ReviewsPage({
     searchParams,
 }: {
-    searchParams: { [key: string]: string | string[] | undefined };
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
     const params = await searchParams;
     const limit = Number(params?.limit) || 10;
