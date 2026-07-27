@@ -83,7 +83,7 @@ const ProductCarousel: FC<ProductCarouselProps> = async ({
     return (
       <ThreeItemGrid
         title={title || "Products"}
-        description="Discover the latest trends! Fresh products just added—shop new styles, tech, and essentials before they're gone."
+        description="Jelajahi layanan pengembangan software, website, dan aplikasi enterprise dari BMS Services."
         products={products.slice(0, 3).map((item) => ({
           id: item.id,
           name: item.name || "",

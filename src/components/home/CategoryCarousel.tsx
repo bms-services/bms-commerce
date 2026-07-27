@@ -86,7 +86,7 @@ const CategoryCarousel: FC<CategoryCarouselProps> = async ({
     topCategories = categories
       .filter((category) => category.id !== "1")
       .sort((a, b) => (a.position || 0) - (b.position || 0))
-      .slice(1, 4);
+      .slice(0, 4);
   } catch (error) {
     console.error("Error fetching categories:", error);
     return null;
@@ -98,11 +98,10 @@ const CategoryCarousel: FC<CategoryCarouselProps> = async ({
     <section className="pt-6 sm:pt-12 lg:pt-20">
         <div className="md:max-w-4.5xl mx-auto mb-5 sm:mb-10 w-auto text-center md:px-36">
           <h2 className="mb-2 text-xl md:text-4xl  font-semibold">
-            Shop by Category
+            Kategori Layanan
           </h2>
           <p className="text-sm md:text-lg font-normal text-selected-black dark:text-selected-white">
-            Discover the latest trends! Fresh products just added—shop new
-            styles, tech, and essentials before they&apos;re gone.
+            Pilih kategori layanan yang sesuai kebutuhan bisnis Anda.
           </p>
         </div>
         <div className="w-full overflow-x-auto overflow-y-hidden">
