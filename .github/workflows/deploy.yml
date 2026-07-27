@@ -1,0 +1,55 @@
+name: Deploy Storefront
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-store-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy to CloudPanel
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p "${{ secrets.SSH_PORT }}" -H "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Sync files
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+        run: |
+          rsync -avz --delete \
+            --exclude '.git/' \
+            --exclude '.env' \
+            --exclude 'node_modules/' \
+            --exclude '.next/' \
+            --exclude 'out/' \
+            --exclude 'coverage/' \
+            --exclude 'tests/' \
+            -e "ssh -i ~/.ssh/deploy_key -p ${SSH_PORT} -o StrictHostKeyChecking=yes" \
+            ./ bmsservices-store@${SSH_HOST}:/home/bmsservices-store/htdocs/store.bmsservices.id/
+
+      - name: Run remote deploy
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: bmsservices-store
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            set -e
+            DEPLOY_PATH="/home/bmsservices-store/htdocs/store.bmsservices.id"
+            bash "${DEPLOY_PATH}/scripts/deploy-remote.sh" "${DEPLOY_PATH}"
